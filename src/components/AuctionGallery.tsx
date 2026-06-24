@@ -31,7 +31,16 @@ export default function AuctionGallery({ vin, isUnlocked, auctionRecord }: Aucti
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [isProcessingCheckout, setIsProcessingCheckout] = useState(false);
-  const [checkoutStep, setCheckoutStep] = useState<'form' | 'success'>('form');
+  const [checkoutStep, setCheckoutStep] = useState<'contact' | 'payment' | 'success'>('contact');
+  const [txnCode] = useState(() => `TXN-${Math.floor(10000 + Math.random() * 90000)}`);
+
+  // Checkout form fields
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [cardNumber, setCardNumber] = useState('');
+  const [cardExpiry, setCardExpiry] = useState('');
+  const [cardCvv, setCardCvv] = useState('');
+  const [cardZip, setCardZip] = useState('');
 
   // Lightbox Zoom & Pan states
   const [zoom, setZoom] = useState(1);
@@ -174,9 +183,23 @@ export default function AuctionGallery({ vin, isUnlocked, auctionRecord }: Aucti
     setTimeout(() => {
       setIsProcessingCheckout(false);
       setCheckoutStep('success');
-      // Set the VIN as unlocked in store
       unlockPremiumForVin(vin);
-    }, 2500); // 2.5 seconds payment simulation
+    }, 2200);
+  };
+
+  const formatCardNumber = (val: string) =>
+    val.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim();
+
+  const formatExpiry = (val: string) => {
+    const digits = val.replace(/\D/g, '').slice(0, 4);
+    return digits.length >= 3 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
+  };
+
+  const resetCheckout = () => {
+    setCheckoutOpen(false);
+    setCheckoutStep('contact');
+    setContactName(''); setContactEmail('');
+    setCardNumber(''); setCardExpiry(''); setCardCvv(''); setCardZip('');
   };
 
   return (
@@ -530,125 +553,245 @@ export default function AuctionGallery({ vin, isUnlocked, auctionRecord }: Aucti
         </div>
       )}
 
-      {/* UPSELL MOCK DECK MODAL */}
+      {/* CHECKOUT MODAL */}
       {checkoutOpen && (
         <div className="fixed inset-0 z-[10000] bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-md rounded-none border-2 border-black shadow-brutal overflow-hidden flex flex-col">
-            
+          <div className="bg-white w-full max-w-md rounded-none border-2 border-black shadow-brutal flex flex-col max-h-[90vh] overflow-y-auto">
+
             {/* Header */}
-            <div className="bg-rose-600 p-4 text-white border-b-2 border-black">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5">
-                  <Lock className="w-4 h-4 text-white" />
-                  <span className="text-[10px] uppercase font-black tracking-widest text-white">Secure Database Activation</span>
+            <div className="bg-black p-4 text-white border-b-2 border-black flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Lock className="w-3.5 h-3.5 text-white" />
+                  <span className="text-[9px] uppercase font-black tracking-widest text-white/70">Secure Checkout</span>
                 </div>
-                <button
-                  onClick={() => setCheckoutOpen(false)}
-                  className="text-white hover:text-black font-extrabold text-sm border-2 border-black bg-black/20 hover:bg-white px-2 py-0.5 leading-none"
-                >
-                  ✕
-                </button>
+                <h3 className="font-display font-extrabold text-sm text-white">
+                  Premium Report — $14.99
+                </h3>
               </div>
-              <h3 className="font-display font-extrabold text-base mt-2 flex items-center gap-1 text-white">
-                Premium Vehicle History Report Upgrade
-              </h3>
+              <button
+                onClick={resetCheckout}
+                className="text-white/60 hover:text-white font-extrabold text-xs border border-white/20 hover:border-white px-2 py-1 transition-all"
+              >
+                ✕
+              </button>
             </div>
 
-            {/* Content Switcher */}
-            {checkoutStep === 'form' ? (
-              <div className="p-5 flex flex-col gap-4">
-                
-                {/* Summary card item description */}
-                <div className="p-3 bg-[#FAF9F6] border-2 border-black rounded-none flex items-center justify-between">
-                  <div>
-                    <p className="text-[10px] uppercase text-slate-450 font-bold">Billing Item</p>
-                    <p className="text-xs font-black text-slate-850">Complete Salvage Media & Bids Unlock</p>
-                    <p className="text-[9px] text-slate-500 font-bold mt-0.5">VIN: {vin}</p>
-                  </div>
-                  <p className="text-lg font-black text-slate-900">$14.99</p>
-                </div>
+            {/* Step progress bar */}
+            {checkoutStep !== 'success' && (
+              <div className="flex border-b-2 border-black">
+                {(['contact', 'payment'] as const).map((step, idx) => {
+                  const isActive = checkoutStep === step;
+                  const isDone = (step === 'contact' && checkoutStep === 'payment');
+                  return (
+                    <div key={step} className={`flex-1 flex items-center gap-2 px-4 py-2.5 border-r-2 border-black last:border-r-0 ${isActive ? 'bg-black text-white' : isDone ? 'bg-emerald-50 text-emerald-700' : 'bg-slate-50 text-slate-400'}`}>
+                      <div className={`w-5 h-5 rounded-none border-2 flex items-center justify-center text-[9px] font-black flex-shrink-0 ${isActive ? 'border-white bg-white text-black' : isDone ? 'border-emerald-500 bg-emerald-500 text-white' : 'border-slate-300'}`}>
+                        {isDone ? '✓' : idx + 1}
+                      </div>
+                      <span className="text-[10px] font-black uppercase tracking-wider">{step === 'contact' ? 'Contact' : 'Payment'}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
-                {/* List features unlocked */}
-                <div className="space-y-2">
-                  <p className="text-[9px] tracking-wider uppercase font-black text-slate-400">Included records in activation:</p>
-                  <ul className="space-y-1.5">
-                    <li className="flex items-center gap-2 text-xs text-slate-700 font-semibold">
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                      <span>10 High-Res photographs (Exterior, Side panel scope, Cabin)</span>
-                    </li>
-                    <li className="flex items-center gap-2 text-xs text-slate-700 font-semibold">
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                      <span>Actual auction price ($1,100 / $15,400) & buyer detail logs</span>
-                    </li>
-                    <li className="flex items-center gap-2 text-xs text-slate-700 font-semibold">
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                      <span>Odometer tamper evaluation checklist</span>
-                    </li>
-                    <li className="flex items-center gap-2 text-xs text-slate-700 font-semibold">
-                      <CheckCircle className="w-3.5 h-3.5 text-emerald-600 flex-shrink-0" />
-                      <span>Insurance branded title & salvage details link</span>
-                    </li>
-                  </ul>
+            {/* Order summary strip */}
+            {checkoutStep !== 'success' && (
+              <div className="flex items-center justify-between gap-3 px-4 py-2.5 bg-[#FAF9F6] border-b-2 border-black">
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black text-slate-800">Complete Salvage Media & Bids Unlock</p>
+                  <p className="text-[9px] text-slate-500 font-mono">VIN: {vin}</p>
                 </div>
+                <span className="font-black text-slate-900 text-sm flex-shrink-0">$14.99</span>
+              </div>
+            )}
 
-                {/* Simulated payment inputs */}
-                <div className="border-t-2 border-black pt-3 flex flex-col gap-2">
-                  <label className="text-[9px] uppercase tracking-wider font-extrabold text-slate-450 block">Simulated Checkout Method</label>
-                  <div className="p-2.5 rounded-none border-2 border-black bg-blue-55/20 flex gap-2 items-center">
-                    <input type="radio" defaultChecked id="mock-pay" className="accent-blue-500" />
+            {/* ── STEP 1: Contact ── */}
+            {checkoutStep === 'contact' && (
+              <form
+                className="p-5 flex flex-col gap-4"
+                onSubmit={(e) => { e.preventDefault(); setCheckoutStep('payment'); }}
+              >
+                <div>
+                  <p className="text-[9px] uppercase tracking-wider font-extrabold text-slate-400 mb-3">Your Details</p>
+                  <div className="flex flex-col gap-3">
                     <div>
-                      <label htmlFor="mock-pay" className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5 cursor-pointer">
-                        Instant Mock Sandbox Balance
-                      </label>
-                      <p className="text-[10px] text-slate-500 font-semibold">Processes simulated payment block without actual expense.</p>
+                      <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-extrabold mb-1">Full Name</label>
+                      <input
+                        required
+                        type="text"
+                        value={contactName}
+                        onChange={(e) => setContactName(e.target.value)}
+                        placeholder="John Doe"
+                        className="w-full bg-[#FAF9F6] border-2 border-black px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 transition-all placeholder:font-sans placeholder:text-slate-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-extrabold mb-1">Email Address</label>
+                      <input
+                        required
+                        type="email"
+                        value={contactEmail}
+                        onChange={(e) => setContactEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        className="w-full bg-[#FAF9F6] border-2 border-black px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 transition-all placeholder:font-sans placeholder:text-slate-400"
+                      />
+                      <p className="text-[9px] text-slate-400 mt-1">Your receipt and access link will be sent here.</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Submit button */}
+                <div className="flex flex-col gap-2 border-t-2 border-black pt-4">
+                  <p className="text-[9px] tracking-wider uppercase font-black text-slate-400 mb-1">What you unlock:</p>
+                  {['10 High-res salvage photographs', 'Actual winning auction bid price', 'Odometer tamper evaluation', 'Insurance title & salvage details'].map((item) => (
+                    <div key={item} className="flex items-center gap-2">
+                      <CheckCircle className="w-3 h-3 text-emerald-500 flex-shrink-0" />
+                      <span className="text-[10px] text-slate-700 font-semibold">{item}</span>
+                    </div>
+                  ))}
+                </div>
+
                 <button
-                  disabled={isProcessingCheckout}
-                  onClick={handleProcessUnlock}
-                  className="w-full mt-2 py-3 bg-rose-600 hover:bg-rose-700 disabled:opacity-50 text-white rounded-none border-2 border-black text-center text-xs font-black uppercase tracking-widest shadow-brutal-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  type="submit"
+                  className="w-full py-3 bg-black hover:bg-slate-800 text-white rounded-none border-2 border-black text-xs font-black uppercase tracking-widest shadow-brutal-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  {isProcessingCheckout ? (
-                    <>
-                      <Clock className="w-4 h-4 animate-spin" />
-                      <span>Validating Auth & Securing...</span>
-                    </>
-                  ) : (
-                    <span>Authorize Mock Payment ($14.99)</span>
-                  )}
+                  Continue to Payment <Sparkles className="w-3.5 h-3.5" />
                 </button>
-                
-                <p className="text-[9px] text-center text-slate-450 font-bold">Secure transactions powered by AI Studio Sandbox Gateway.</p>
-              </div>
-            ) : (
-              <div className="p-5 flex flex-col items-center justify-center text-center gap-4 py-8">
-                <div className="h-16 w-16 bg-emerald-100 text-emerald-600 rounded-none flex items-center justify-center border-2 border-black mb-1">
-                  <CheckCircle className="w-8 h-8 font-black shrink-0" />
+                <p className="text-[9px] text-center text-slate-400">256-bit SSL encrypted · No data stored on servers</p>
+              </form>
+            )}
+
+            {/* ── STEP 2: Payment ── */}
+            {checkoutStep === 'payment' && (
+              <form
+                className="p-5 flex flex-col gap-4"
+                onSubmit={(e) => { e.preventDefault(); handleProcessUnlock(); }}
+              >
+                <div>
+                  <p className="text-[9px] uppercase tracking-wider font-extrabold text-slate-400 mb-3">Card Details</p>
+                  <div className="flex flex-col gap-3">
+                    <div>
+                      <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-extrabold mb-1">Card Number</label>
+                      <input
+                        required
+                        type="text"
+                        inputMode="numeric"
+                        value={cardNumber}
+                        onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
+                        placeholder="1234 5678 9012 3456"
+                        maxLength={19}
+                        className="w-full bg-[#FAF9F6] border-2 border-black px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 transition-all tracking-widest placeholder:tracking-normal placeholder:font-sans placeholder:text-slate-400"
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="col-span-1">
+                        <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-extrabold mb-1">Expiry</label>
+                        <input
+                          required
+                          type="text"
+                          inputMode="numeric"
+                          value={cardExpiry}
+                          onChange={(e) => setCardExpiry(formatExpiry(e.target.value))}
+                          placeholder="MM/YY"
+                          maxLength={5}
+                          className="w-full bg-[#FAF9F6] border-2 border-black px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 transition-all placeholder:font-sans placeholder:text-slate-400"
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-extrabold mb-1">CVV</label>
+                        <input
+                          required
+                          type="password"
+                          inputMode="numeric"
+                          value={cardCvv}
+                          onChange={(e) => setCardCvv(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                          placeholder="•••"
+                          maxLength={4}
+                          className="w-full bg-[#FAF9F6] border-2 border-black px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 transition-all placeholder:font-sans placeholder:text-slate-400"
+                        />
+                      </div>
+                      <div className="col-span-1">
+                        <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-extrabold mb-1">ZIP</label>
+                        <input
+                          required
+                          type="text"
+                          inputMode="numeric"
+                          value={cardZip}
+                          onChange={(e) => setCardZip(e.target.value.replace(/\D/g, '').slice(0, 5))}
+                          placeholder="90210"
+                          maxLength={5}
+                          className="w-full bg-[#FAF9F6] border-2 border-black px-3 py-2 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 transition-all placeholder:font-sans placeholder:text-slate-400"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Accepted cards */}
+                <div className="flex items-center gap-2">
+                  {['VISA', 'MC', 'AMEX', 'DISC'].map((c) => (
+                    <span key={c} className="text-[8px] font-black border-2 border-black px-1.5 py-0.5 text-slate-600 bg-slate-50">{c}</span>
+                  ))}
+                  <div className="flex items-center gap-1 ml-auto text-slate-400">
+                    <ShieldCheck className="w-3 h-3 text-emerald-500" />
+                    <span className="text-[9px] font-bold">SSL Secured</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 border-t-2 border-black pt-3">
+                  <button
+                    type="button"
+                    onClick={() => setCheckoutStep('contact')}
+                    className="px-4 py-2.5 border-2 border-black text-xs font-black uppercase text-slate-700 hover:bg-slate-100 transition-all"
+                  >
+                    ← Back
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isProcessingCheckout}
+                    className="flex-1 py-2.5 bg-black hover:bg-slate-800 disabled:opacity-50 text-white rounded-none border-2 border-black text-xs font-black uppercase tracking-widest shadow-brutal-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    {isProcessingCheckout ? (
+                      <><Clock className="w-3.5 h-3.5 animate-spin" /> Processing...</>
+                    ) : (
+                      <>Pay $14.99 <Lock className="w-3.5 h-3.5" /></>
+                    )}
+                  </button>
+                </div>
+                <p className="text-[9px] text-center text-slate-400">Sandbox demo — no real charge will occur</p>
+              </form>
+            )}
+
+            {/* ── STEP 3: Success ── */}
+            {checkoutStep === 'success' && (
+              <div className="p-6 flex flex-col items-center text-center gap-4">
+                <div className="w-14 h-14 bg-emerald-500 border-2 border-black flex items-center justify-center shadow-brutal-sm">
+                  <CheckCircle className="w-7 h-7 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-base font-extrabold text-[#0E1726]">
-                    Payment Approved!
-                  </h3>
-                  <p className="text-xs text-slate-600 font-bold max-w-[280px] mt-1.5 leading-relaxed">
-                    Premium insurance records and 10 salvage photographs have been unlocked. Check the interactive gallery to explore all unblurred details.
+                  <h3 className="font-display font-extrabold text-lg text-[#0E1726]">Payment Approved!</h3>
+                  <p className="text-xs text-slate-600 font-medium mt-1 max-w-[280px] leading-relaxed">
+                    All {auctionRecord.photoCount} salvage photos and premium records are now unlocked for this VIN.
                   </p>
                 </div>
 
-                <div className="p-2 bg-emerald-50 text-emerald-900 text-[10px] font-extrabold rounded-none w-full border-2 border-black">
-                  Transaction Code: TXN_{Math.floor(Math.random() * 90000) + 10000}
+                <div className="w-full bg-emerald-50 border-2 border-black p-3 text-left flex flex-col gap-1">
+                  <p className="text-[9px] uppercase tracking-wider font-extrabold text-emerald-700">Transaction Confirmed</p>
+                  <p className="text-[10px] font-mono font-black text-slate-800">{txnCode}</p>
+                  <p className="text-[9px] text-slate-500 font-medium">Receipt sent to {contactEmail || 'your email'}</p>
                 </div>
 
-                <button
-                  onClick={() => setCheckoutOpen(false)}
-                  className="w-full mt-2 py-2.5 bg-slate-900 hover:bg-black text-white font-extrabold border-2 border-black shadow-brutal-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all uppercase text-xs tracking-wider rounded-none"
-                >
-                  Return to Active Gallery
-                </button>
+                <div className="w-full flex flex-col gap-2">
+                  <button
+                    onClick={resetCheckout}
+                    className="w-full py-2.5 bg-black hover:bg-slate-800 text-white font-black border-2 border-black shadow-brutal-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all uppercase text-xs tracking-wider"
+                  >
+                    View Unlocked Gallery
+                  </button>
+                </div>
               </div>
             )}
+
           </div>
         </div>
       )}

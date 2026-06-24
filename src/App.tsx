@@ -5,6 +5,7 @@ import { useTimelineStore } from './store/useTimelineStore';
 import MapComponent from './components/MapComponent';
 import TimelineComponent from './components/TimelineComponent';
 import EventDetailPanel from './components/EventDetailPanel';
+import AuctionSpotlight from './components/AuctionSpotlight';
 import { decodeVinViaNHTSA, generateSmartJourney, parseRawReportText } from './utils/reportParser';
 import { CARFAX_SAMPLE_DATA } from './data/carfaxSampleData';
 import { useAuth } from './contexts/AuthContext';
@@ -675,7 +676,15 @@ export default function App({ initialTab }: { initialTab?: 'timeline' | 'garage'
         {/* ==================== A. TIMELINE SCREEN VIEW (MAP + PANELS) ==================== */}
         {isStarted && activeTab === 'timeline' && (
           <div className="flex-1 flex flex-col gap-5 min-h-0">
-            
+
+            {/* Auction / Sales spotlight — shown first when photos are present */}
+            {activeVehicle?.auctionHistory && activeVehicle.auctionHistory.some((r) => r.photos.length > 0) && (
+              <AuctionSpotlight
+                records={activeVehicle.auctionHistory}
+                vehicleLabel={`${activeVehicle.year} ${activeVehicle.make} ${activeVehicle.model}`}
+              />
+            )}
+
             {/* Active vehicle quick characteristics stripe */}
             <section className="bg-[#FAF9F6] rounded-none p-4 border-2 border-black shadow-brutal flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
