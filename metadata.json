@@ -1,0 +1,6 @@
+{
+  "name": "Vehicle History Timeline",
+  "description": "An interactive, map-driven journey through a vehicle's history report, presenting ownership, service records, recalls, and damage in an animated timeline.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
