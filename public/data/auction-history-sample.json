@@ -1,0 +1,80 @@
+{
+  "vehicle": {
+    "id": "2T1BU4EE3AC509614",
+    "year": 2010,
+    "make": "Toyota",
+    "model": "Corolla",
+    "trim": "LE Automatic",
+    "vin": "2T1BU4EE3AC509614",
+    "currentMileage": 135400,
+    "titleBrand": "branded",
+    "titleType": "SC (Salvage Certificate)",
+    "totalLoss": true,
+    "salvage": true,
+    "summary": {
+      "damageSeverity": "Severe",
+      "carfaxValue": 3450,
+      "carfaxValueType": "Retail",
+      "serviceRecordCount": 8,
+      "openRecalls": 0,
+      "previousOwners": 1,
+      "usage": "Personal Vehicle",
+      "lastOwnedState": "Illinois",
+      "totalLoss": true,
+      "structuralDamage": true,
+      "airbagDeployment": true,
+      "odometerRollback": false,
+      "titleBrandsClean": false
+    },
+    "owners": [
+      {
+        "ownerNumber": 1,
+        "yearPurchased": 2010,
+        "type": "Personal",
+        "lengthOfOwnership": "9 yrs 10 mo",
+        "states": ["Illinois"],
+        "avgMilesPerYear": 12500,
+        "lastOdometer": 122400
+      }
+    ]
+  },
+  "auctionRecords": [
+    {
+      "id": "auc_1",
+      "kind": "auction",
+      "status": "Sold",
+      "date": "2019-12-31",
+      "price": 1100,
+      "currency": "USD",
+      "sellerType": "Insurance Company",
+      "auctionDate": "2019-12-31",
+      "location": "Chicago North, IL",
+      "coords": { "lat": 42.0354, "lng": -88.2826, "label": "Chicago North auction (IL) — approx." },
+      "odometer": 999999,
+      "odometerNote": "Broken / unreliable odometer (999,999)",
+      "condition": {
+        "runsAndDrives": false,
+        "engineStart": false,
+        "hasKeys": true
+      },
+      "primaryDamage": "Front end",
+      "secondaryDamage": "Side paint scrape",
+      "exportedTo": null,
+      "linkedIncident": { "accidentDate": "2019-12-06", "accidentLocation": "Addison, IL", "totalLossDate": "2019-12-03" },
+      "photoCount": 10,
+      "photos": [
+        { "id": "p1",  "url": "https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&q=80&w=800",  "category": "exterior", "caption": "Front left 3/4 — visible front damage", "isDamage": true,  "watermark": "source" },
+        { "id": "p2",  "url": "https://images.unsplash.com/photo-1617469767053-d3b508a0d825?auto=format&fit=crop&q=80&w=800",  "category": "damage",   "caption": "Front-end close-up — hood, bumper, headlight", "isDamage": true,  "watermark": "source" },
+        { "id": "p3",  "url": "https://images.unsplash.com/photo-1606577924006-27d39b132ae2?auto=format&fit=crop&q=80&w=800",  "category": "exterior", "caption": "Rear right 3/4 side overview", "isDamage": false, "watermark": "source" },
+        { "id": "p4",  "url": "https://images.unsplash.com/photo-1563720223185-11003d516935?auto=format&fit=crop&q=80&w=800",  "category": "exterior", "caption": "Rear left 3/4 side profile", "isDamage": false, "watermark": "source" },
+        { "id": "p5",  "url": "https://images.unsplash.com/photo-1562620644-65ba45aaa8e1?auto=format&fit=crop&q=80&w=800",  "category": "interior", "caption": "Front seats / cab compartment", "isDamage": false, "watermark": "source" },
+        { "id": "p6",  "url": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&q=80&w=800",  "category": "interior", "caption": "Rear bench seats and roof liner", "isDamage": false, "watermark": "source" },
+        { "id": "p7",  "url": "https://images.unsplash.com/photo-1486006920555-c77dce18193b?auto=format&fit=crop&q=80&w=800",  "category": "engine",   "caption": "Engine bay and front core structure", "isDamage": false, "watermark": "source" },
+        { "id": "p8",  "url": "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&q=80&w=800",  "category": "gauges",   "caption": "Instrument cluster and clock odometer readings", "isDamage": false, "watermark": "source" },
+        { "id": "p9",  "url": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&q=80&w=800",  "category": "interior", "caption": "Center console / transmission selector", "isDamage": false, "watermark": "source" },
+        { "id": "p10", "url": "https://images.unsplash.com/photo-1506015391300-4802dc74de2e?auto=format&fit=crop&q=80&w=800", "category": "docs",     "caption": "VIN plate / passenger door b-pillar decal", "isDamage": false, "watermark": "source" }
+      ]
+    }
+  ],
+  "salesRecords": []
+}
