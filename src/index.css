@@ -5,75 +5,93 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-display: "Outfit", sans-serif;
-
+  
   --color-brand-blue-start: #2563EB;
   --color-brand-blue-end: #1D4ED8;
+  
+  --shadow-soft-sm: 0 1px 2px rgba(16, 23, 38, 0.06);
+  --shadow-soft-lg: 0 1px 2px rgba(16, 23, 38, 0.06), 0 8px 24px rgba(16, 23, 38, 0.08);
+  
+  --shadow-brutal: 4px 4px 0px 0px #000000;
+  --shadow-brutal-sm: 2px 2px 0px 0px #000000;
+  --shadow-brutal-lg: 6px 6px 0px 0px #000000;
 
-  --shadow-soft-sm: 0 1px 3px rgba(16, 23, 38, 0.06), 0 1px 2px rgba(16, 23, 38, 0.04);
-  --shadow-soft-md: 0 4px 6px -1px rgba(16, 23, 38, 0.07), 0 2px 4px -2px rgba(16, 23, 38, 0.05);
-  --shadow-soft-lg: 0 10px 15px -3px rgba(16, 23, 38, 0.08), 0 4px 6px -4px rgba(16, 23, 38, 0.05);
-  --shadow-soft-xl: 0 20px 25px -5px rgba(16, 23, 38, 0.1), 0 8px 10px -6px rgba(16, 23, 38, 0.06);
-
-  /* Keep brutal vars for backwards compat but unused in new design */
-  --shadow-brutal: 0 4px 14px rgba(16, 23, 38, 0.1);
-  --shadow-brutal-sm: 0 2px 8px rgba(16, 23, 38, 0.08);
-  --shadow-brutal-lg: 0 8px 24px rgba(16, 23, 38, 0.12);
-
-  --font-size-xs: 0.875rem;
-  --font-size-sm: 0.875rem;
+  --font-size-xs: 0.875rem; /* 14px minimum */
+  --font-size-sm: 0.875rem; /* 14px minimum */
 }
 
+/* Base styles to align with design requirements */
 body {
   font-family: var(--font-sans);
-  background-color: #F8FAFC;
+  background-color: #F3F4F6;
   color: #0E1726;
   overflow-x: hidden;
 }
 
-/* Leaflet map — clean, modern, borderless */
+/* Custom styles for Leaflet map to look incredibly clean and light-mode on-theme */
 .leaflet-container {
   width: 100%;
   height: 100%;
   background: #f1f3f5 !important;
-  border: 1px solid #e5e7eb !important;
-  border-radius: 16px !important;
+  border: 2px solid #000000 !important;
+  border-radius: 0px !important;
 }
 
+/* Custom Leaflet popup overrides */
 .leaflet-popup-content-wrapper {
   background: white !important;
   color: #0E1726 !important;
-  box-shadow: 0 10px 25px rgba(16, 23, 38, 0.12) !important;
-  border-radius: 12px !important;
-  border: 1px solid #e5e7eb !important;
+  box-shadow: 4px 4px 0px 0px #000000 !important;
+  border-radius: 0px !important;
+  border: 2px solid #000000 !important;
   font-family: var(--font-sans) !important;
 }
 
 .leaflet-popup-tip {
   background: white !important;
-  border: none !important;
+  border: 2px solid #000000 !important;
 }
 
+/* Disable default outer focus outlines for Leaflet tiles */
 .leaflet-tile-container {
-  filter: grayscale(10%) brightness(102%) contrast(98%);
+  filter: grayscale(15%) brightness(101%) contrast(99%);
 }
 
+/* Butter-smooth momentum/transition effects */
 .transition-all-custom {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Subtle glow effects */
-.glow-info    { box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.15); }
-.glow-good    { box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
-.glow-highlight { box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
-.glow-warning { box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15); }
-.glow-alert   { box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.15); }
+/* Glow effects for active state elements */
+.glow-info {
+  box-shadow: 0 0 15px rgba(100, 116, 139, 0.5);
+}
+.glow-good {
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+}
+.glow-highlight {
+  box-shadow: 0 0 15px rgba(37, 99, 235, 0.5);
+}
+.glow-warning {
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.5);
+}
+.glow-alert {
+  box-shadow: 0 0 15px rgba(244, 63, 94, 0.5);
+}
 
-.no-scrollbar::-webkit-scrollbar { display: none; }
+/* Clean up scrollbars for horizontal flow charts */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
 .no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }
 
+/* Dynamic responsive typography constraints */
+
+/* Desktop & Tablet Screens (min-width: 640px)
+   Keep 14px minimum font size as standard defaults on larger screens to prevent tiny text */
 @media (min-width: 640px) {
   html, body, button, input, select, textarea, label {
     font-size: 14px;
@@ -81,14 +99,23 @@ body {
 
   .text-xs,
   .text-sm,
-  .text-\[6px\], .text-\[7px\], .text-\[8px\], .text-\[9px\],
-  .text-\[10px\], .text-\[10\.5px\], .text-\[11px\],
-  .text-\[12px\], .text-\[13px\], .text-\[14px\] {
+  .text-\[6px\],
+  .text-\[7px\],
+  .text-\[8px\],
+  .text-\[9px\],
+  .text-\[10px\],
+  .text-\[10\.5px\],
+  .text-\[11px\],
+  .text-\[12px\],
+  .text-\[13px\],
+  .text-\[14px\] {
     font-size: 14px !important;
     line-height: 1.4 !important;
   }
 }
 
+/* Mobile Screens (max-width: 639px)
+   Scale down to 11.5px/12.5px to prevent layout breaking or overflowing on narrower viewports */
 @media (max-width: 639px) {
   html, body, button, input, select, textarea, label {
     font-size: 12.5px;
@@ -96,14 +123,22 @@ body {
 
   .text-xs,
   .text-sm,
-  .text-\[6px\], .text-\[7px\], .text-\[8px\], .text-\[9px\],
-  .text-\[10px\], .text-\[10\.5px\], .text-\[11px\],
-  .text-\[12px\], .text-\[13px\], .text-\[14px\] {
+  .text-\[6px\],
+  .text-\[7px\],
+  .text-\[8px\],
+  .text-\[9px\],
+  .text-\[10px\],
+  .text-\[10\.5px\],
+  .text-\[11px\],
+  .text-\[12px\],
+  .text-\[13px\],
+  .text-\[14px\] {
     font-size: 11.5px !important;
     line-height: 1.35 !important;
   }
 }
 
+/* Exempt map legends, map warnings, and map pins from the mandatory 16px font-size to keep them compact, beautiful, and fully proportional inside map containers */
 .map-legend-container,
 .map-legend-container button,
 .map-legend-container div,
@@ -118,9 +153,14 @@ body {
   letter-spacing: 0.05em !important;
 }
 
-.map-legend-container span.truncate      { font-size: 9.5px !important; }
-.map-legend-container .grid span.w-3\.5,
-.map-legend-container .grid span.leading-none { font-size: 8px !important; }
+.map-legend-container span.truncate {
+  font-size: 9.5px !important;
+}
+
+.map-legend-container .grid span.w-3.5,
+.map-legend-container .grid span.leading-none {
+  font-size: 8px !important;
+}
 
 .map-alert-container,
 .map-alert-container h5,
@@ -130,8 +170,14 @@ body {
   line-height: 1.3 !important;
 }
 
-.map-alert-container h5  { font-size: 9.5px !important; letter-spacing: 0.05em !important; }
-.map-alert-container p   { font-size: 9px !important; }
+.map-alert-container h5 {
+  font-size: 9.5px !important;
+  letter-spacing: 0.05em !important;
+}
+
+.map-alert-container p {
+  font-size: 9px !important;
+}
 
 .custom-map-pin,
 .custom-map-pin div,
@@ -139,3 +185,5 @@ body {
   font-size: 10px !important;
   line-height: 1 !important;
 }
+
+
