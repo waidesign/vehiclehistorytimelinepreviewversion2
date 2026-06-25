@@ -17,8 +17,8 @@ export default function LoginPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#FFFDF9] flex items-center justify-center">
-        <div className="text-xs font-black uppercase tracking-wider text-slate-400 animate-pulse">Loading...</div>
+      <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center">
+        <div className="text-xs font-medium text-gray-400 animate-pulse">Loading…</div>
       </div>
     );
   }
@@ -40,23 +40,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFFDF9] flex flex-col">
+    <div className="min-h-screen bg-[#F8FAFC] flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b-2 border-black px-6 py-3.5 flex items-center justify-between">
+      <header className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between shadow-sm">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="p-2 bg-black text-white border-2 border-black shadow-brutal-sm">
+          <div className="p-2 bg-blue-600 rounded-xl text-white">
             <Car className="w-4 h-4" />
           </div>
           <div>
-            <h1 className="font-display font-extrabold text-[#0E1726] text-sm tracking-tight leading-none">
+            <h1 className="font-display font-bold text-gray-900 text-sm tracking-tight leading-none">
               Vehicle History Timeline
             </h1>
-            <p className="text-[10px] text-slate-500 mt-0.5 font-bold">Cinematic Map-Driven Automotive Journeys</p>
+            <p className="text-[11px] text-gray-400 mt-0.5">Cinematic Map-Driven Automotive Journeys</p>
           </div>
         </Link>
         <Link
           to="/signup"
-          className="text-[10px] bg-white border-2 border-black px-3 py-1.5 font-bold uppercase tracking-wider hover:bg-black hover:text-white transition-all"
+          className="text-xs bg-white border border-gray-200 px-3.5 py-2 rounded-lg font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all"
         >
           Create Account
         </Link>
@@ -65,32 +65,29 @@ export default function LoginPage() {
       {/* Main */}
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          {/* Card */}
-          <div className="bg-white border-2 border-black shadow-brutal p-8">
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-8">
             {/* Title */}
             <div className="mb-8">
-              <span className="inline-block text-[10px] bg-black text-white font-extrabold px-2 py-0.5 uppercase tracking-wider mb-3">
+              <span className="inline-block text-xs bg-blue-50 text-blue-700 font-semibold px-3 py-1 rounded-full border border-blue-100 mb-4">
                 Members Area
               </span>
-              <h2 className="font-display font-extrabold text-2xl text-[#0E1726] leading-tight">
+              <h2 className="font-display font-bold text-2xl text-gray-900 leading-tight">
                 Welcome back
               </h2>
-              <p className="text-xs text-slate-500 mt-1 font-medium">
+              <p className="text-sm text-gray-400 mt-1.5 font-medium">
                 Sign in to access your garage and vehicle timelines.
               </p>
             </div>
 
-            {/* Error */}
             {error && (
-              <div className="mb-5 bg-red-50 border-2 border-red-500 px-3.5 py-2.5 text-xs font-bold text-red-700">
+              <div className="mb-5 bg-red-50 border border-red-200 px-4 py-3 rounded-xl text-xs font-medium text-red-600">
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-              {/* Email */}
               <div>
-                <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-extrabold mb-1.5">
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5">
                   Email Address
                 </label>
                 <input
@@ -100,20 +97,14 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full bg-[#FAF9F6] border-2 border-black px-3.5 py-2.5 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 transition-all placeholder:font-sans placeholder:text-slate-400"
+                  className="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-xs text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all placeholder:text-gray-400"
                 />
               </div>
 
-              {/* Password */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-[10px] uppercase tracking-wider text-slate-500 font-extrabold">
-                    Password
-                  </label>
-                  <Link
-                    to="/forgot-password"
-                    className="text-[10px] text-blue-600 hover:text-blue-800 font-bold underline"
-                  >
+                  <label className="block text-xs font-semibold text-gray-600">Password</label>
+                  <Link to="/forgot-password" className="text-xs text-blue-600 hover:text-blue-700 font-medium">
                     Forgot password?
                   </Link>
                 </div>
@@ -125,46 +116,44 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-[#FAF9F6] border-2 border-black px-3.5 py-2.5 text-xs font-mono text-slate-900 focus:outline-none focus:border-blue-600 transition-all pr-10 placeholder:font-sans placeholder:text-slate-400"
+                    className="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-xs text-gray-900 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all pr-10 placeholder:text-gray-400"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                   >
-                    {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-black text-white font-black text-xs uppercase tracking-wider px-4 py-3 border-2 border-black hover:bg-white hover:text-black transition-all shadow-brutal-sm hover:translate-x-[0.5px] hover:translate-y-[0.5px] hover:shadow-none flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-blue-600 text-white font-semibold text-sm px-4 py-3 rounded-xl hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed mt-1"
               >
-                {isLoading ? 'Signing in...' : (
-                  <>Sign In <ArrowRight className="w-3.5 h-3.5" /></>
+                {isLoading ? 'Signing in…' : (
+                  <>Sign In <ArrowRight className="w-4 h-4" /></>
                 )}
               </button>
             </form>
 
-            {/* Divider */}
             <div className="my-6 flex items-center gap-3">
-              <div className="flex-1 h-px bg-black/10" />
-              <span className="text-[10px] text-slate-400 font-bold uppercase">or</span>
-              <div className="flex-1 h-px bg-black/10" />
+              <div className="flex-1 h-px bg-gray-100" />
+              <span className="text-xs text-gray-400 font-medium">or</span>
+              <div className="flex-1 h-px bg-gray-100" />
             </div>
 
-            <p className="text-center text-[10px] text-slate-500 font-medium">
+            <p className="text-center text-xs text-gray-400">
               Don't have an account?{' '}
-              <Link to="/signup" className="text-blue-600 font-black hover:underline">
+              <Link to="/signup" className="text-blue-600 font-semibold hover:underline">
                 Sign up free
               </Link>
             </p>
           </div>
 
-          <p className="text-center text-[10px] text-slate-400 font-medium mt-4">
+          <p className="text-center text-[11px] text-gray-400 font-medium mt-4">
             By signing in you agree to our Terms of Service and Privacy Policy.
           </p>
         </div>
